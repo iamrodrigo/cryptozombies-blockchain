@@ -1,15 +1,25 @@
 pragma solidity ^0.4.24;
 
-contract ZombieFactory {
+import "./Ownable.sol";
+
+contract ZombieFactory is Ownable {
 
     event NewZombie(uint zombieId, string name, uint dna);
 
     uint dnaDigits = 16;
     uint dnaModulus = 10 ** dnaDigits;
+    uint cooldownTime = 1 days;
 
+    /**
+    If you have multiple uints inside a struct, using a smaller-sized uint
+    when possible will allow Solidity to pack these variables together to
+    take up less storage. For example:
+    */
     struct Zombie {
         string name;
         uint dna;
+        uint32 level;
+        uint32 readyTime;
     }
 
     /**
@@ -30,7 +40,7 @@ contract ZombieFactory {
 
     function _createZombie(string _name, uint _dna) internal {
         // push returns the length of zombies
-        uint id = zombies.push(Zombie(_name, _dna)) - 1;
+        uint id = zombies.push(Zombie(_name, _dna, 1, uint32(now + cooldownTime))) - 1;
         
         zombieToOwner[id] = msg.sender;
         ownerZombieCount[msg.sender]++;
