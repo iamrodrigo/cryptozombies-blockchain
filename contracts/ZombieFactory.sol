@@ -40,6 +40,7 @@ contract ZombieFactory is Ownable {
 
     function _createZombie(string _name, uint _dna) internal {
         // push returns the length of zombies
+        // Verify if returns 0 or 1
         uint id = zombies.push(Zombie(_name, _dna, 1, uint32(now + cooldownTime))) - 1;
         
         zombieToOwner[id] = msg.sender;
@@ -62,5 +63,4 @@ contract ZombieFactory is Ownable {
         randDna = randDna - randDna % 100;
         _createZombie(_name, randDna);
     }
-
 }
