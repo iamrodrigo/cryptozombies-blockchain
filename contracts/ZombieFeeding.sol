@@ -24,6 +24,8 @@ contract ZombieFeeding is ZombieFactory {
   // Create connection to external contract, using the address and the interface
   KittyInterface kittyContract;
 
+  /** https://ethereum.stackexchange.com/questions/19380/external-vs-public-best-practices
+  external vs public */
   function setKittyContractAddress(address _address) external onlyOwner {
     kittyContract = KittyInterface(_address);
   }

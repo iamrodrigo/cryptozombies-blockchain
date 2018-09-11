@@ -38,6 +38,7 @@ contract ZombieFactory is Ownable {
     // address = 0x5a4b3f2cc2d3a4bc6dee3 => count = 3 Zombies
     mapping (address => uint) ownerZombieCount;
 
+    /* internal: can only be called within the contract itself and any derived contracts (similar to protected in oop). */
     function _createZombie(string _name, uint _dna) internal {
         // push returns the length of zombies
         // Verify if returns 0 or 1
@@ -50,6 +51,11 @@ contract ZombieFactory is Ownable {
         emit NewZombie(id, _name, _dna);
     }
 
+    /* view: that function will not modify state of contract, i.e. not modify variables, not emit events etc.*/
+    /* The above function doesn't actually change state in Solidity — e.g. it doesn't change
+    any values or write anything.
+    So in this case we could declare it as a view function, meaning it's only viewing the data
+     but not modifying it:.*/
     function _generateRandomDna(string _str) private view returns (uint) {
         // Always strings are handled with keccak256 (to compare or whatever you need)
         uint rand = uint(keccak256(_str));
