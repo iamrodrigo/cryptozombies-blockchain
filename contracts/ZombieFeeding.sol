@@ -24,8 +24,14 @@ contract ZombieFeeding is ZombieFactory {
   // Create connection to external contract, using the address and the interface
   KittyInterface kittyContract;
 
+  modifier onlyOwnerOf(uint _zombieId) {
+    require(msg.sender == zombieToOwner[_zombieId]);
+    _;
+  }
+
   /** https://ethereum.stackexchange.com/questions/19380/external-vs-public-best-practices
-  external vs public */
+  external vs public
+  external: // Can only be called outside the contract */
   function setKittyContractAddress(address _address) external onlyOwner {
     kittyContract = KittyInterface(_address);
   }
@@ -38,9 +44,7 @@ contract ZombieFeeding is ZombieFactory {
     return (_zombie.readyTime <= now);
   }
 
-  function feedAndMultiply(uint _zombieId, uint _targetDna, string _species) public {
-    require(msg.sender == zombieToOwner[_zombieId]);
-
+  function feedAndMultiply(uint _zombieId, uint _targetDna, string _species) internal onlyOwnerOf(_zombieId){
     // Investigate storage
     Zombie storage myZombie = zombies[_zombieId];
     require(_isReady(myZombie));
